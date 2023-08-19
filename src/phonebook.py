@@ -6,7 +6,7 @@ class Phonebook:
     """The main class that contains and manipulates all the records"""
 
     def __init__(self) -> None:
-        self.file = Path("phonebook.csv")
+        self.file = Path("../phonebook.csv")
         self.fieldnames = ("first_name", "middle_name", "last_name", "organization", "phone_work", "phone_personal")
         self.records: list[dict] = []
 
@@ -39,14 +39,3 @@ class Phonebook:
 
     def find(self) -> None:
         pass
-
-
-def main():
-    phonebook = Phonebook()
-    phonebook.display()
-    phonebook.add(["Иван", "Иванович", "Иванов", "Яндекс", "+79220000000", "+79221111111"])
-    phonebook.display()
-
-
-if __name__ == "__main__":
-    main()
