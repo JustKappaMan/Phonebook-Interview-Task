@@ -1,18 +1,5 @@
 from pathlib import Path
 from csv import DictReader
-from dataclasses import dataclass
-
-
-@dataclass
-class Record:
-    """An individual record in the phonebook"""
-
-    first_name: str
-    middle_name: str
-    last_name: str
-    organization: str
-    phone_number_work: str
-    phone_number_personal: str
 
 
 class Phonebook:
