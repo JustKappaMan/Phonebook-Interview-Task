@@ -8,6 +8,7 @@ class Phonebook:
     def __init__(self) -> None:
         self.file = Path("phonebook.csv")
         self.fieldnames = ("first_name", "middle_name", "last_name", "organization", "phone_work", "phone_personal")
+        self.records: list[dict] = []
 
         if not self.file.exists():
             with open(self.file, "w", encoding="utf-8", newline="") as f:
@@ -16,7 +17,7 @@ class Phonebook:
         else:
             with open(self.file, "r", encoding="utf-8", newline="") as f:
                 reader = DictReader(f)
-                self.records: list[dict] = list(reader)
+                self.records = list(reader)
 
     def display(self) -> None:
         """TODO: rewrite using some module for pretty tables"""
@@ -30,9 +31,6 @@ class Phonebook:
             writer.writerow({k: v for k, v in zip(self.fieldnames, record)})
 
     def edit(self) -> None:
-        pass
-
-    def delete(self) -> None:
         pass
 
     def find(self) -> None:
