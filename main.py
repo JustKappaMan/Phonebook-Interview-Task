@@ -1,3 +1,4 @@
+from typing import cast
 from pathlib import Path
 from csv import DictReader
 
@@ -9,25 +10,25 @@ class Phonebook:
         self.file = Path("phonebook.csv")
         with open(self.file, "r", encoding="utf-8", newline="") as f:
             reader = DictReader(f)
-            self.headers = reader.fieldnames
-            self.records = list(reader)
+            self.headers: list[str] = cast(reader.fieldnames, list[str])
+            self.records: list[dict] = list(reader)
 
-    def display(self):
+    def display(self) -> None:
         """TODO: rewrite using some module for pretty tables"""
         print(*(f"{header:<16}" for header in self.headers), sep="|")
         for record in self.records:
             print(*(f"{value:<16}" for value in record.values()), sep="|")
 
-    def add(self):
+    def add(self) -> None:
         pass
 
-    def edit(self):
+    def edit(self) -> None:
         pass
 
-    def delete(self):
+    def delete(self) -> None:
         pass
 
-    def find(self):
+    def find(self) -> None:
         pass
 
 
