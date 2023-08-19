@@ -6,7 +6,7 @@ class Phonebook:
     """The main class that contains and manipulates all the records"""
 
     def __init__(self) -> None:
-        self.file = Path("../phonebook.csv")
+        self.file = Path("..", "phonebook.csv")
         self.fieldnames = ("first_name", "middle_name", "last_name", "organization", "phone_work", "phone_personal")
         self.records: list[dict] = []
 
