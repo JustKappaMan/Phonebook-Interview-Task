@@ -1,6 +1,5 @@
-from typing import cast
 from pathlib import Path
-from csv import DictReader
+from csv import DictReader, DictWriter
 
 
 class Phonebook:
@@ -10,7 +9,7 @@ class Phonebook:
         self.file = Path("phonebook.csv")
         with open(self.file, "r", encoding="utf-8", newline="") as f:
             reader = DictReader(f)
-            self.headers: list[str] = cast(reader.fieldnames, list[str])
+            self.headers: list[str] = list(reader.fieldnames)
             self.records: list[dict] = list(reader)
 
     def display(self) -> None:
@@ -19,8 +18,10 @@ class Phonebook:
         for record in self.records:
             print(*(f"{value:<16}" for value in record.values()), sep="|")
 
-    def add(self) -> None:
-        pass
+    def add(self, record: list[str]) -> None:
+        with open(self.file, "a", encoding="utf-8", newline="") as f:
+            writer = DictWriter(f, fieldnames=self.headers)
+            writer.writerow({k: v for k, v in zip(self.headers, record)})
 
     def edit(self) -> None:
         pass
@@ -34,6 +35,8 @@ class Phonebook:
 
 def main():
     phonebook = Phonebook()
+    phonebook.display()
+    phonebook.add(["f", "m", "l", "org", "p1", "p2"])
     phonebook.display()
 
 
