@@ -15,9 +15,12 @@ class Phonebook:
                 writer = DictWriter(f, fieldnames=self.fieldnames)
                 writer.writeheader()
         else:
-            with open(self.file, "r", encoding="utf-8", newline="") as f:
-                reader = DictReader(f)
-                self.records = list(reader)
+            self.__update_records()
+
+    def __update_records(self):
+        with open(self.file, "r", encoding="utf-8", newline="") as f:
+            reader = DictReader(f)
+            self.records = list(reader)
 
     def display(self) -> None:
         """TODO: rewrite using some module for pretty tables"""
@@ -29,6 +32,7 @@ class Phonebook:
         with open(self.file, "a", encoding="utf-8", newline="") as f:
             writer = DictWriter(f, fieldnames=self.fieldnames)
             writer.writerow({k: v for k, v in zip(self.fieldnames, record)})
+        self.__update_records()
 
     def edit(self) -> None:
         pass
@@ -39,7 +43,9 @@ class Phonebook:
 
 def main():
     phonebook = Phonebook()
+    phonebook.display()
     phonebook.add(["Иван", "Иванович", "Иванов", "Яндекс", "+79220000000", "+79221111111"])
+    phonebook.display()
 
 
 if __name__ == "__main__":
