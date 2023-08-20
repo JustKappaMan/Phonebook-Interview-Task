@@ -1,3 +1,5 @@
+from sys import exit
+
 from phonebook import Phonebook
 from misc import *
 
@@ -31,7 +33,7 @@ class InputHandler:
                 case "4":
                     self.find_records()
                 case "5":
-                    self.close()
+                    InputHandler.close()
                 case _:
                     pass
 
@@ -83,5 +85,6 @@ class InputHandler:
         input("Finding record...press any key to continue...")
         self.run()
 
-    def close(self):
+    @staticmethod
+    def close():
         exit()
