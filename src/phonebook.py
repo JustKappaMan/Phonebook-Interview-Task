@@ -3,7 +3,7 @@ from csv import DictReader, DictWriter
 
 
 class Phonebook:
-    """The main class that contains and manipulates all the records"""
+    """The class that contains and manipulates all the records"""
 
     def __init__(self) -> None:
         self.file = Path("..", "phonebook.csv")
@@ -17,7 +17,7 @@ class Phonebook:
         else:
             self.__update_records()
 
-    def __update_records(self):
+    def __update_records(self) -> None:
         with open(self.file, "r", encoding="utf-8", newline="") as f:
             reader = DictReader(f)
             self.records = list(reader)

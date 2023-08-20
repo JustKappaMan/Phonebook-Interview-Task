@@ -1,7 +1,7 @@
 from input_handler import InputHandler
 
 
-def main():
+def main() -> None:
     x = InputHandler()
     x.run()
 

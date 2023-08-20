@@ -5,14 +5,16 @@ from misc import *
 
 
 class InputHandler:
-    def __init__(self):
+    """The UI class that uses Phonebook to manipulate all the records"""
+
+    def __init__(self) -> None:
         self.phonebook = Phonebook()
         self.user_input = None
 
-    def run(self):
+    def run(self) -> None:
+        """Main menu"""
         while True:
             clear_screen()
-
             self.user_input = input(
                 "Телефонный справочник\n\n"
                 "1. Просмотреть записи\n"
@@ -35,17 +37,18 @@ class InputHandler:
                 case "5":
                     InputHandler.close()
                 case _:
-                    pass
+                    continue
 
-    def view_records(self):
-        pages = chunk(self.phonebook.records, 10)
+    def view_records(self) -> None:
+        """Menu section to view DB page by page"""
+        pages = chunk(self.phonebook.records)
         current_page_index = 0
 
         while True:
             clear_screen()
             print(f"Телефонный справочник (c. {current_page_index + 1})\n")
 
-            """TODO: rewrite using some module for pretty tables"""
+            # TODO: rewrite using some module for pretty tables
             print(*(f"{field:<16}" for field in self.phonebook.fieldnames), sep="|")
             for record in pages[current_page_index]:
                 print(*(f"{value:<16}" for value in record.values()), sep="|")
@@ -68,23 +71,23 @@ class InputHandler:
                 case "3":
                     self.run()
                 case _:
-                    pass
+                    continue
 
-    def add_record(self):
+    def add_record(self) -> None:
         clear_screen()
         input("Adding record...press any key to continue...")
         self.run()
 
-    def edit_record(self):
+    def edit_record(self) -> None:
         clear_screen()
         input("Editing record...press any key to continue...")
         self.run()
 
-    def find_records(self):
+    def find_records(self) -> None:
         clear_screen()
         input("Finding record...press any key to continue...")
         self.run()
 
     @staticmethod
-    def close():
+    def close() -> None:
         exit()
