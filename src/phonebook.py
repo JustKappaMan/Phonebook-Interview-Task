@@ -28,8 +28,13 @@ class Phonebook:
             writer.writerow(record)
         self.__update_records()
 
-    def edit(self) -> None:
-        pass
+    def edit(self, record_id: int, record: dict) -> None:
+        self.records[record_id - 1] = record
+        with open(self.file, "w", encoding="utf-8", newline="") as f:
+            writer = DictWriter(f, fieldnames=self.fieldnames)
+            writer.writeheader()
+            writer.writerows(self.records)
+        self.__update_records()
 
     def find(self) -> None:
         pass

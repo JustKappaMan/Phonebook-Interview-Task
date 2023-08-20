@@ -81,13 +81,11 @@ class Program:
         print("Телефонный справочник (новая запись)\n")
 
         new_record = {"ID": len(self.phonebook.records) + 1}
-        for fieldname in self.phonebook.fieldnames[1:]:
+        for name in self.phonebook.fieldnames[1:]:
             while True:
-                user_input = input(f"{fieldname}: ")
-                if len(user_input) > 16:
-                    continue
-                else:
-                    new_record[fieldname] = user_input
+                user_input = input(f"{name}: ")
+                if len(user_input) <= 16:
+                    new_record[name] = user_input
                     break
 
         self.phonebook.add(new_record)
@@ -111,9 +109,66 @@ class Program:
                     continue
 
     def __render_editing_section(self) -> None:
-        clear_screen()
-        input("Editing record...press any key to continue...")
-        self.__render_main_menu()
+        """Menu section to edit an existing record in DB"""
+        while True:
+            clear_screen()
+            user_input = input(
+                "Телефонный справочник (редактирование записи)\n\n" "Введите ID записи, подлежащей редактированию: "
+            )
+
+            # Check user_input to be positive integer in valid range
+            if not user_input.startswith("-") and user_input.isdigit():
+                if 0 < (record_id := int(user_input)) <= len(self.phonebook.records):
+                    break
+
+        while True:
+            clear_screen()
+            print("Телефонный справочник (редактирование записи)\n")
+            # TODO: rewrite using some module for pretty tables
+            print(*(f"{field:<16}" for field in self.phonebook.fieldnames), sep="|")
+            print(*(f"{value:<16}" for value in self.phonebook.records[record_id - 1].values()), sep="|")
+
+            user_input = input(
+                "\n1. Отредактировать данную запись\n" "2. Главное меню\n\n" "Введите номер пункта меню: "
+            )
+
+            match user_input:
+                case "1":
+                    clear_screen()
+                    print("Телефонный справочник (редактирование записи)\n")
+
+                    new_record = {"ID": record_id}
+                    for name in self.phonebook.fieldnames[1:]:
+                        while True:
+                            user_input = input(f"{name}: ")
+                            if len(user_input) <= 16:
+                                new_record[name] = user_input
+                                break
+
+                    self.phonebook.edit(record_id, new_record)
+
+                    while True:
+                        clear_screen()
+                        user_input = input(
+                            "Телефонный справочник (редактирование записи)\n\n"
+                            "Запись успешно отредактирована!\n\n"
+                            "1. Отредактировать еще одну\n"
+                            "2. Главное меню\n\n"
+                            "Введите номер пункта меню: "
+                        )
+
+                        match user_input:
+                            case "1":
+                                self.__render_editing_section()
+                            case "2":
+                                self.__render_main_menu()
+                            case _:
+                                continue
+
+                case "2":
+                    self.__render_main_menu()
+                case _:
+                    continue
 
     def __render_finding_section(self) -> None:
         clear_screen()
