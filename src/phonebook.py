@@ -22,12 +22,6 @@ class Phonebook:
             reader = DictReader(f)
             self.records = list(reader)
 
-    def display(self) -> None:
-        """TODO: rewrite using some module for pretty tables"""
-        print(*(f"{field:<16}" for field in self.fieldnames), sep="|")
-        for record in self.records:
-            print(*(f"{value:<16}" for value in record.values()), sep="|")
-
     def add(self, record: list[str]) -> None:
         with open(self.file, "a", encoding="utf-8", newline="") as f:
             writer = DictWriter(f, fieldnames=self.fieldnames)

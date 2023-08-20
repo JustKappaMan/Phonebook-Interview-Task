@@ -28,9 +28,37 @@ class InputHandler:
 
     @clear_screen
     def view_records(self):
-        self.phonebook.display()
-        input("Press any key to continue...")
-        self.run()
+        pages = chunk(self.phonebook.records, 10)
+        current_page_index = 0
+
+        while True:
+            cls()
+            print(f"Телефонный справочник (c. {current_page_index + 1})\n")
+
+            """TODO: rewrite using some module for pretty tables"""
+            print(*(f"{field:<16}" for field in self.phonebook.fieldnames), sep="|")
+            for record in pages[current_page_index]:
+                print(*(f"{value:<16}" for value in record.values()), sep="|")
+
+            self.user_input = input(
+                "\n1. Следующая страница\n"
+                "2. Предыдущая страница\n"
+                "3. Главное меню\n\n"
+                "Введите номер пункта меню: "
+            )
+
+            # Can't turn the first/last page? Redisplay the current one.
+            match self.user_input:
+                case "1":
+                    if current_page_index < len(pages) - 1:
+                        current_page_index += 1
+                case "2":
+                    if current_page_index > 0:
+                        current_page_index -= 1
+                case "3":
+                    self.run()
+                case _:
+                    pass
 
     @clear_screen
     def add_record(self):

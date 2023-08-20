@@ -1,6 +1,7 @@
 from os import system
 from sys import platform
 from functools import wraps
+from itertools import islice
 
 screens = {
     "start_screen": (
@@ -14,10 +15,19 @@ screens = {
 }
 
 
+def cls():
+    system("cls" if platform == "win32" else "clear")
+
+
 def clear_screen(method):
     @wraps(method)
     def wrapper(self, *args, **kwargs):
-        system("cls" if platform == "win32" else "clear")
+        cls()
         return method(self, *args, **kwargs)
 
     return wrapper
+
+
+def chunk(it, size):
+    it = iter(it)
+    return list(iter(lambda: tuple(islice(it, size)), ()))
