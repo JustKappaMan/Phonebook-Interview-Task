@@ -9,22 +9,30 @@ class InputHandler:
 
     @clear_screen
     def run(self):
-        print(screens["start_screen"])
-        self.user_input = input("Введите номер пункта меню: ")
+        while True:
+            self.user_input = input(
+                "Телефонный справочник\n\n"
+                "1. Просмотреть записи\n"
+                "2. Добавить запись\n"
+                "3. Редактировать запись\n"
+                "4. Поиск по записям\n"
+                "5. Завершить программу\n\n"
+                "Введите номер пункта меню: "
+            )
 
-        match self.user_input:
-            case "1":
-                self.view_records()
-            case "2":
-                self.add_record()
-            case "3":
-                self.edit_record()
-            case "4":
-                self.find_records()
-            case "5":
-                self.close()
-            case _:
-                self.wrong_input()
+            match self.user_input:
+                case "1":
+                    self.view_records()
+                case "2":
+                    self.add_record()
+                case "3":
+                    self.edit_record()
+                case "4":
+                    self.find_records()
+                case "5":
+                    self.close()
+                case _:
+                    cls()
 
     @clear_screen
     def view_records(self):
@@ -78,8 +86,3 @@ class InputHandler:
     @clear_screen
     def close(self):
         exit()
-
-    @clear_screen
-    def wrong_input(self):
-        input("Wrong input! Press any key to continue...")
-        self.run()
