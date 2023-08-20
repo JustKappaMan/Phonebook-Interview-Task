@@ -7,9 +7,10 @@ class InputHandler:
         self.phonebook = Phonebook()
         self.user_input = None
 
-    @clear_screen
     def run(self):
         while True:
+            clear_screen()
+
             self.user_input = input(
                 "Телефонный справочник\n\n"
                 "1. Просмотреть записи\n"
@@ -32,15 +33,14 @@ class InputHandler:
                 case "5":
                     self.close()
                 case _:
-                    cls()
+                    pass
 
-    @clear_screen
     def view_records(self):
         pages = chunk(self.phonebook.records, 10)
         current_page_index = 0
 
         while True:
-            cls()
+            clear_screen()
             print(f"Телефонный справочник (c. {current_page_index + 1})\n")
 
             """TODO: rewrite using some module for pretty tables"""
@@ -68,21 +68,20 @@ class InputHandler:
                 case _:
                     pass
 
-    @clear_screen
     def add_record(self):
+        clear_screen()
         input("Adding record...press any key to continue...")
         self.run()
 
-    @clear_screen
     def edit_record(self):
+        clear_screen()
         input("Editing record...press any key to continue...")
         self.run()
 
-    @clear_screen
     def find_records(self):
+        clear_screen()
         input("Finding record...press any key to continue...")
         self.run()
 
-    @clear_screen
     def close(self):
         exit()
