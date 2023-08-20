@@ -88,8 +88,24 @@ class InputHandler:
                     break
 
         self.phonebook.add(new_record)
-        input("\nЗапись успешно добавлена! Нажмите Enter для возврата в Главное меню...")
-        self.run()
+
+        while True:
+            clear_screen()
+            self.user_input = input(
+                "Телефонный справочник (новая запись)\n\n"
+                "Запись успешно добавлена!\n\n"
+                "1. Добавить еще одну\n"
+                "2. Главное меню\n\n"
+                "Введите номер пункта меню: "
+            )
+
+            match self.user_input:
+                case "1":
+                    self.add_record()
+                case "2":
+                    self.run()
+                case _:
+                    continue
 
     def edit_record(self) -> None:
         clear_screen()
