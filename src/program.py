@@ -4,13 +4,16 @@ from phonebook import Phonebook
 from misc import *
 
 
-class InputHandler:
+class Program:
     """The UI class that uses Phonebook to manipulate all the records"""
 
     def __init__(self) -> None:
         self.phonebook = Phonebook()
 
-    def run(self) -> None:
+    def run(self):
+        self.__render_main_menu()
+
+    def __render_main_menu(self) -> None:
         """Main menu"""
         while True:
             clear_screen()
@@ -26,19 +29,19 @@ class InputHandler:
 
             match user_input:
                 case "1":
-                    self.view_records()
+                    self.__render_viewing_section()
                 case "2":
-                    self.add_record()
+                    self.__render_adding_section()
                 case "3":
-                    self.edit_record()
+                    self.__render_editing_section()
                 case "4":
-                    self.find_records()
+                    self.__render_finding_section()
                 case "5":
-                    InputHandler.close()
+                    Program.close()
                 case _:
                     continue
 
-    def view_records(self) -> None:
+    def __render_viewing_section(self) -> None:
         """Menu section to view DB page by page"""
         pages = chunk(self.phonebook.records)
         current_page_index = 0
@@ -68,11 +71,12 @@ class InputHandler:
                     if current_page_index > 0:
                         current_page_index -= 1
                 case "3":
-                    self.run()
+                    self.__render_main_menu()
                 case _:
                     continue
 
-    def add_record(self) -> None:
+    def __render_adding_section(self) -> None:
+        """Menu section to add a new record into DB"""
         clear_screen()
         print("Телефонный справочник (новая запись)\n")
 
@@ -100,21 +104,21 @@ class InputHandler:
 
             match user_input:
                 case "1":
-                    self.add_record()
+                    self.__render_adding_section()
                 case "2":
-                    self.run()
+                    self.__render_main_menu()
                 case _:
                     continue
 
-    def edit_record(self) -> None:
+    def __render_editing_section(self) -> None:
         clear_screen()
         input("Editing record...press any key to continue...")
-        self.run()
+        self.__render_main_menu()
 
-    def find_records(self) -> None:
+    def __render_finding_section(self) -> None:
         clear_screen()
         input("Finding record...press any key to continue...")
-        self.run()
+        self.__render_main_menu()
 
     @staticmethod
     def close() -> None:

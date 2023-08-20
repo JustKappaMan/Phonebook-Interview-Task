@@ -1,9 +1,9 @@
-from input_handler import InputHandler
+from program import Program
 
 
 def main() -> None:
-    x = InputHandler()
-    x.run()
+    program = Program()
+    program.run()
 
 
 if __name__ == "__main__":
