@@ -90,4 +90,5 @@ class InputHandler:
 
     @staticmethod
     def close() -> None:
+        clear_screen()
         exit()
