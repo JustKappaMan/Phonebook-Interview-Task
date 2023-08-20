@@ -9,13 +9,12 @@ class InputHandler:
 
     def __init__(self) -> None:
         self.phonebook = Phonebook()
-        self.user_input = None
 
     def run(self) -> None:
         """Main menu"""
         while True:
             clear_screen()
-            self.user_input = input(
+            user_input = input(
                 "Телефонный справочник\n\n"
                 "1. Просмотреть записи\n"
                 "2. Добавить запись\n"
@@ -25,7 +24,7 @@ class InputHandler:
                 "Введите номер пункта меню: "
             )
 
-            match self.user_input:
+            match user_input:
                 case "1":
                     self.view_records()
                 case "2":
@@ -53,7 +52,7 @@ class InputHandler:
             for record in pages[current_page_index]:
                 print(*(f"{value:<16}" for value in record.values()), sep="|")
 
-            self.user_input = input(
+            user_input = input(
                 "\n1. Следующая страница\n"
                 "2. Предыдущая страница\n"
                 "3. Главное меню\n\n"
@@ -61,7 +60,7 @@ class InputHandler:
             )
 
             # Can't turn the first/last page? Redisplay the current one.
-            match self.user_input:
+            match user_input:
                 case "1":
                     if current_page_index < len(pages) - 1:
                         current_page_index += 1
@@ -80,18 +79,18 @@ class InputHandler:
         new_record = {"ID": len(self.phonebook.records) + 1}
         for fieldname in self.phonebook.fieldnames[1:]:
             while True:
-                self.user_input = input(f"{fieldname}: ")
-                if len(self.user_input) > 16:
+                user_input = input(f"{fieldname}: ")
+                if len(user_input) > 16:
                     continue
                 else:
-                    new_record[fieldname] = self.user_input
+                    new_record[fieldname] = user_input
                     break
 
         self.phonebook.add(new_record)
 
         while True:
             clear_screen()
-            self.user_input = input(
+            user_input = input(
                 "Телефонный справочник (новая запись)\n\n"
                 "Запись успешно добавлена!\n\n"
                 "1. Добавить еще одну\n"
@@ -99,7 +98,7 @@ class InputHandler:
                 "Введите номер пункта меню: "
             )
 
-            match self.user_input:
+            match user_input:
                 case "1":
                     self.add_record()
                 case "2":
