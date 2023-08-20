@@ -75,7 +75,20 @@ class InputHandler:
 
     def add_record(self) -> None:
         clear_screen()
-        input("Adding record...press any key to continue...")
+        print("Телефонный справочник (новая запись)\n")
+
+        new_record = {"ID": len(self.phonebook.records) + 1}
+        for fieldname in self.phonebook.fieldnames[1:]:
+            while True:
+                self.user_input = input(f"{fieldname}: ")
+                if len(self.user_input) > 16:
+                    continue
+                else:
+                    new_record[fieldname] = self.user_input
+                    break
+
+        self.phonebook.add(new_record)
+        input("\nЗапись успешно добавлена! Нажмите Enter для возврата в Главное меню...")
         self.run()
 
     def edit_record(self) -> None:

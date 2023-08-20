@@ -7,7 +7,7 @@ class Phonebook:
 
     def __init__(self) -> None:
         self.file = Path("..", "phonebook.csv")
-        self.fieldnames = ("id", "first_name", "middle_name", "last_name", "organization", "phone_work", "phone_personal")
+        self.fieldnames = ("ID", "Имя", "Отчество", "Фамилия", "Организация", "Рабочий телефон", "Личный телефон")
         self.records: list[dict] = []
 
         if not self.file.exists():
@@ -22,10 +22,10 @@ class Phonebook:
             reader = DictReader(f)
             self.records = list(reader)
 
-    def add(self, record: list[str]) -> None:
+    def add(self, record: dict) -> None:
         with open(self.file, "a", encoding="utf-8", newline="") as f:
             writer = DictWriter(f, fieldnames=self.fieldnames)
-            writer.writerow({k: v for k, v in zip(self.fieldnames, record)})
+            writer.writerow(record)
         self.__update_records()
 
     def edit(self) -> None:
