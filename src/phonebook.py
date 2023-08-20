@@ -7,7 +7,7 @@ class Phonebook:
 
     def __init__(self) -> None:
         self.file = Path("..", "phonebook.csv")
-        self.fieldnames = ("first_name", "middle_name", "last_name", "organization", "phone_work", "phone_personal")
+        self.fieldnames = ("id", "first_name", "middle_name", "last_name", "organization", "phone_work", "phone_personal")
         self.records: list[dict] = []
 
         if not self.file.exists():
