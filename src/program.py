@@ -11,6 +11,14 @@ def chunk(it: list, size: int = 10) -> list[tuple]:
     return list(iter(lambda: tuple(itertools.islice(it, size)), ()))
 
 
+def guarded_input(prompt: str, length: int = 16) -> str:
+    """To accept data that will fit in table column"""
+    while True:
+        input_data = input(prompt)
+        if len(input_data) <= length:
+            return input_data
+
+
 class Program:
     """Basically, the UI class that uses Phonebook to manipulate all the records"""
 
@@ -86,11 +94,7 @@ class Program:
         # It's generated automatically, not received from user input
         new_record = {"ID": len(self.phonebook.records) + 1}
         for name in self.phonebook.fieldnames[1:]:
-            while True:
-                user_input = input(f"{name}: ")
-                if len(user_input) <= 16:
-                    new_record[name] = user_input
-                    break
+            new_record[name] = guarded_input(f"{name}: ")
 
         self.phonebook.add(new_record)
 
@@ -138,11 +142,7 @@ class Program:
 
                     new_record = {"ID": record_id}
                     for name in self.phonebook.fieldnames[1:]:
-                        while True:
-                            user_input = input(f"{name}: ")
-                            if len(user_input) <= 16:
-                                new_record[name] = user_input
-                                break
+                        new_record[name] = guarded_input(f"{name}: ")
 
                     self.phonebook.edit(record_id, new_record)
 
@@ -192,25 +192,27 @@ class Program:
             Program.clear_screen()
             match user_input:
                 case "1":
-                    search_criteria["ID"] = input("Телефонный справочник (поиск по записям)\n\nВведите ID: ")
+                    search_criteria["ID"] = guarded_input("Телефонный справочник (поиск по записям)\n\nВведите ID: ")
                 case "2":
-                    search_criteria["Имя"] = input("Телефонный справочник (поиск по записям)\n\nВведите имя: ")
+                    search_criteria["Имя"] = guarded_input("Телефонный справочник (поиск по записям)\n\nВведите имя: ")
                 case "3":
-                    search_criteria["Отчество"] = input(
+                    search_criteria["Отчество"] = guarded_input(
                         "Телефонный справочник (поиск по записям)\n\nВведите отчество: "
                     )
                 case "4":
-                    search_criteria["Фамилия"] = input("Телефонный справочник (поиск по записям)\n\nВведите фамилию: ")
+                    search_criteria["Фамилия"] = guarded_input(
+                        "Телефонный справочник (поиск по записям)\n\nВведите фамилию: "
+                    )
                 case "5":
-                    search_criteria["Организация"] = input(
+                    search_criteria["Организация"] = guarded_input(
                         "Телефонный справочник (поиск по записям)\n\nВведите организацию: "
                     )
                 case "6":
-                    search_criteria["Рабочий телефон"] = input(
+                    search_criteria["Рабочий телефон"] = guarded_input(
                         "Телефонный справочник (поиск по записям)\n\nВведите рабочий телефон: "
                     )
                 case "7":
-                    search_criteria["Личный телефон"] = input(
+                    search_criteria["Личный телефон"] = guarded_input(
                         "Телефонный справочник (поиск по записям)\n\nВведите личный телефон: "
                     )
                 case "8":
