@@ -80,6 +80,8 @@ class Program:
         clear_screen()
         print("Телефонный справочник (новая запись)\n")
 
+        # ID is just like "INTEGER AUTO_INCREMENT" column in SQL table
+        # It's generated automatically, not received from user input
         new_record = {"ID": len(self.phonebook.records) + 1}
         for name in self.phonebook.fieldnames[1:]:
             while True:
@@ -113,10 +115,11 @@ class Program:
         while True:
             clear_screen()
             user_input = input(
-                "Телефонный справочник (редактирование записи)\n\n" "Введите ID записи, подлежащей редактированию: "
+                "Телефонный справочник (редактирование записи)\n\n"
+                "Введите ID записи, подлежащей редактированию: "
             )
 
-            # Check user_input to be positive integer in valid range
+            # Check record ID to be positive integer in valid range
             if not user_input.startswith("-") and user_input.isdigit():
                 if 0 < (record_id := int(user_input)) <= len(self.phonebook.records):
                     break
@@ -124,12 +127,16 @@ class Program:
         while True:
             clear_screen()
             print("Телефонный справочник (редактирование записи)\n")
+
             # TODO: rewrite using some module for pretty tables
+            # Print the record user want to edit
             print(*(f"{field:<16}" for field in self.phonebook.fieldnames), sep="|")
             print(*(f"{value:<16}" for value in self.phonebook.records[record_id - 1].values()), sep="|")
 
             user_input = input(
-                "\n1. Отредактировать данную запись\n" "2. Главное меню\n\n" "Введите номер пункта меню: "
+                "\n1. Отредактировать данную запись\n"
+                "2. Главное меню\n\n"
+                "Введите номер пункта меню: "
             )
 
             match user_input:
