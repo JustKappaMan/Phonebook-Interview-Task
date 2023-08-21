@@ -1,4 +1,5 @@
-from sys import exit
+import os
+import sys
 
 from phonebook import Phonebook
 from misc import *
@@ -16,7 +17,7 @@ class Program:
     def __render_main_menu(self) -> None:
         """Main menu"""
         while True:
-            clear_screen()
+            Program.clear_screen()
             user_input = input(
                 "Телефонный справочник\n\n"
                 "1. Просмотреть записи\n"
@@ -47,7 +48,7 @@ class Program:
         current_page_index = 0
 
         while True:
-            clear_screen()
+            Program.clear_screen()
             print(f"Телефонный справочник (c. {current_page_index + 1})\n")
             self.__print_table(pages[current_page_index])
 
@@ -72,7 +73,7 @@ class Program:
 
     def __render_adding_section(self) -> None:
         """Menu section to add a new record into DB"""
-        clear_screen()
+        Program.clear_screen()
         print("Телефонный справочник (новая запись)\n")
 
         # ID is just like "INTEGER AUTO_INCREMENT" column in SQL table
@@ -88,7 +89,7 @@ class Program:
         self.phonebook.add(new_record)
 
         while True:
-            clear_screen()
+            Program.clear_screen()
             user_input = input(
                 "Телефонный справочник (новая запись)\n\n"
                 "Запись успешно добавлена!\n\n"
@@ -108,7 +109,7 @@ class Program:
     def __render_editing_section(self) -> None:
         """Menu section to edit an existing record in DB"""
         while True:
-            clear_screen()
+            Program.clear_screen()
             user_input = input(
                 "Телефонный справочник (редактирование записи)\n\nВведите ID записи, подлежащей редактированию: "
             )
@@ -119,14 +120,14 @@ class Program:
                     break
 
         while True:
-            clear_screen()
+            Program.clear_screen()
             print("Телефонный справочник (редактирование записи)\n")
             self.__print_table([self.phonebook.records[record_id - 1]])
 
             user_input = input("\n1. Отредактировать данную запись\n2. Главное меню\n\nВведите номер пункта меню: ")
             match user_input:
                 case "1":
-                    clear_screen()
+                    Program.clear_screen()
                     print("Телефонный справочник (редактирование записи)\n")
 
                     new_record = {"ID": record_id}
@@ -140,7 +141,7 @@ class Program:
                     self.phonebook.edit(record_id, new_record)
 
                     while True:
-                        clear_screen()
+                        Program.clear_screen()
                         user_input = input(
                             "Телефонный справочник (редактирование записи)\n\n"
                             "Запись успешно отредактирована!\n\n"
@@ -166,7 +167,7 @@ class Program:
         search_criteria = dict.fromkeys(self.phonebook.fieldnames)
 
         while True:
-            clear_screen()
+            Program.clear_screen()
             user_input = input(
                 "Телефонный справочник (поиск по записям)\n\n"
                 "Пожалуйста, задайте критерии для поиска\n\n"
@@ -182,7 +183,7 @@ class Program:
                 "Введите номер пункта меню: "
             )
 
-            clear_screen()
+            Program.clear_screen()
             match user_input:
                 case "1":
                     search_criteria["ID"] = input("Телефонный справочник (поиск по записям)\n\nВведите ID: ")
@@ -210,7 +211,7 @@ class Program:
                     if not (found_records := self.phonebook.search(search_criteria)):
                         # "Nothing was found" menu section
                         while True:
-                            clear_screen()
+                            Program.clear_screen()
                             user_input = input(
                                 "Телефонный справочник (результаты поиска)\n\n"
                                 "Поиск с заданными критериями не дал результата\n\n"
@@ -229,7 +230,7 @@ class Program:
                     else:
                         # "Successful search results" menu section
                         while True:
-                            clear_screen()
+                            Program.clear_screen()
                             print("Телефонный справочник (результаты поиска)\n")
                             self.__print_table(found_records)
 
@@ -253,6 +254,11 @@ class Program:
             print(*(f"{value:<16}" for value in record.values()), sep="|")
 
     @staticmethod
+    def clear_screen() -> None:
+        """Clear command line on any platform"""
+        os.system("cls" if sys.platform == "win32" else "clear")
+
+    @staticmethod
     def close() -> None:
-        clear_screen()
-        exit()
+        Program.clear_screen()
+        sys.exit()

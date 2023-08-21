@@ -1,11 +1,4 @@
-from os import system
-from sys import platform
 from itertools import islice
-
-
-def clear_screen() -> None:
-    """Clear command line on any platform"""
-    system("cls" if platform == "win32" else "clear")
 
 
 def chunk(it: list, size: int = 10) -> list[tuple]:
