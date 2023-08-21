@@ -235,15 +235,29 @@ class Program:
                                     continue
                     else:
                         # "Successful search results" menu section
+                        pages = chunk(found_records)
+                        current_page_index = 0
+
                         while True:
                             Program.clear_screen()
-                            print("Телефонный справочник (результаты поиска)\n")
-                            self.__print_table(found_records)
+                            print(f"Телефонный справочник (результаты поиска c. {current_page_index + 1})\n")
+                            self.__print_table(pages[current_page_index])
 
-                            user_input = input("\n1. Главное меню\n\nВведите номер пункта меню: ")
+                            user_input = input(
+                                "\n1. Следующая страница\n"
+                                "2. Предыдущая страница\n"
+                                "3. Главное меню\n\n"
+                                "Введите номер пункта меню: "
+                            )
 
                             match user_input:
                                 case "1":
+                                    if current_page_index < len(pages) - 1:
+                                        current_page_index += 1
+                                case "2":
+                                    if current_page_index > 0:
+                                        current_page_index -= 1
+                                case "3":
                                     self.__render_main_menu()
                                 case _:
                                     continue
