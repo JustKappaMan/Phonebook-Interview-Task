@@ -91,14 +91,11 @@ class Program:
 
     def __render_adding_section(self) -> None:
         """Menu section to add a new record into DB"""
-        Program.clear_screen()
-        print("Телефонный справочник (новая запись)\n")
-
         # ID is just like "INTEGER AUTO_INCREMENT" column in SQL table
         # It's generated automatically, not received from user input
         new_record = {"ID": len(self.phonebook.records) + 1}
         for name in self.phonebook.fieldnames[1:]:
-            new_record[name] = guarded_input(f"{name}: ")
+            new_record[name] = guarded_input(f"Телефонный справочник (новая запись)\n\n{name}: ", clear_screen=True)
 
         self.phonebook.add(new_record)
 
@@ -125,7 +122,7 @@ class Program:
         while True:
             user_input = guarded_input(
                 "Телефонный справочник (редактирование записи)\n\nВведите ID записи, подлежащей редактированию: ",
-                clear_screen=True
+                clear_screen=True,
             )
 
             # Check record ID to be positive integer in valid range
@@ -144,8 +141,7 @@ class Program:
                     new_record = {"ID": record_id}
                     for name in self.phonebook.fieldnames[1:]:
                         new_record[name] = guarded_input(
-                            f"Телефонный справочник (редактирование записи)\n\n{name}: ",
-                            clear_screen=True
+                            f"Телефонный справочник (редактирование записи)\n\n{name}: ", clear_screen=True
                         )
 
                     self.phonebook.edit(record_id, new_record)
@@ -196,28 +192,32 @@ class Program:
             Program.clear_screen()
             match user_input:
                 case "1":
-                    search_criteria["ID"] = guarded_input("Телефонный справочник (поиск по записям)\n\nВведите ID: ")
+                    search_criteria["ID"] = guarded_input(
+                        "Телефонный справочник (поиск по записям)\n\nВведите ID: ", clear_screen=True
+                    )
                 case "2":
-                    search_criteria["Имя"] = guarded_input("Телефонный справочник (поиск по записям)\n\nВведите имя: ")
+                    search_criteria["Имя"] = guarded_input(
+                        "Телефонный справочник (поиск по записям)\n\nВведите имя: ", clear_screen=True
+                    )
                 case "3":
                     search_criteria["Отчество"] = guarded_input(
-                        "Телефонный справочник (поиск по записям)\n\nВведите отчество: "
+                        "Телефонный справочник (поиск по записям)\n\nВведите отчество: ", clear_screen=True
                     )
                 case "4":
                     search_criteria["Фамилия"] = guarded_input(
-                        "Телефонный справочник (поиск по записям)\n\nВведите фамилию: "
+                        "Телефонный справочник (поиск по записям)\n\nВведите фамилию: ", clear_screen=True
                     )
                 case "5":
                     search_criteria["Организация"] = guarded_input(
-                        "Телефонный справочник (поиск по записям)\n\nВведите организацию: "
+                        "Телефонный справочник (поиск по записям)\n\nВведите организацию: ", clear_screen=True
                     )
                 case "6":
                     search_criteria["Рабочий телефон"] = guarded_input(
-                        "Телефонный справочник (поиск по записям)\n\nВведите рабочий телефон: "
+                        "Телефонный справочник (поиск по записям)\n\nВведите рабочий телефон: ", clear_screen=True
                     )
                 case "7":
                     search_criteria["Личный телефон"] = guarded_input(
-                        "Телефонный справочник (поиск по записям)\n\nВведите личный телефон: "
+                        "Телефонный справочник (поиск по записям)\n\nВведите личный телефон: ", clear_screen=True
                     )
                 case "8":
                     if not (found_records := self.phonebook.search(search_criteria)):
