@@ -1,8 +1,14 @@
 import os
 import sys
+import itertools
 
 from phonebook import Phonebook
-from misc import *
+
+
+def chunk(it: list, size: int = 10) -> list[tuple]:
+    """Split a list into equally-sized (except the last one) tuples"""
+    it = iter(it)
+    return list(iter(lambda: tuple(itertools.islice(it, size)), ()))
 
 
 class Program:
@@ -11,7 +17,7 @@ class Program:
     def __init__(self) -> None:
         self.phonebook = Phonebook()
 
-    def run(self):
+    def run(self) -> None:
         self.__render_main_menu()
 
     def __render_main_menu(self) -> None:
