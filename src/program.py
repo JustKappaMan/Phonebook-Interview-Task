@@ -120,9 +120,9 @@ class Program:
         """Menu section to edit an existing record in DB"""
         while True:
             Program.clear_screen()
-            user_input = input(
-                "Телефонный справочник (редактирование записи)\n\nВведите ID записи, подлежащей редактированию: "
-            )
+            print("Телефонный справочник (редактирование записи)\n")
+
+            user_input = guarded_input("Введите ID записи, подлежащей редактированию: ")
 
             # Check record ID to be positive integer in valid range
             if not user_input.startswith("-") and user_input.isdigit() and len(user_input) <= 16:
