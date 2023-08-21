@@ -125,7 +125,7 @@ class Program:
             )
 
             # Check record ID to be positive integer in valid range
-            if not user_input.startswith("-") and user_input.isdigit():
+            if not user_input.startswith("-") and user_input.isdigit() and len(user_input) <= 16:
                 if 0 < (record_id := int(user_input)) <= len(self.phonebook.records):
                     break
 
