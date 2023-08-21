@@ -11,10 +11,14 @@ def chunk(it: list, size: int = 10) -> list[tuple]:
     return list(iter(lambda: tuple(itertools.islice(it, size)), ()))
 
 
-def guarded_input(prompt: str, length: int = 16) -> str:
+def guarded_input(prompt: str, length: int = 16, clear_screen: bool = False) -> str:
     """To accept data that will fit in table column"""
     while True:
+        if clear_screen:
+            Program.clear_screen()
+
         input_data = input(prompt)
+
         if len(input_data) <= length:
             return input_data
 
@@ -119,13 +123,13 @@ class Program:
     def __render_editing_section(self) -> None:
         """Menu section to edit an existing record in DB"""
         while True:
-            Program.clear_screen()
-            print("Телефонный справочник (редактирование записи)\n")
-
-            user_input = guarded_input("Введите ID записи, подлежащей редактированию: ")
+            user_input = guarded_input(
+                "Телефонный справочник (редактирование записи)\n\nВведите ID записи, подлежащей редактированию: ",
+                clear_screen=True
+            )
 
             # Check record ID to be positive integer in valid range
-            if not user_input.startswith("-") and user_input.isdigit() and len(user_input) <= 16:
+            if not user_input.startswith("-") and user_input.isdigit():
                 if 0 < (record_id := int(user_input)) <= len(self.phonebook.records):
                     break
 
@@ -137,12 +141,12 @@ class Program:
             user_input = input("\n1. Отредактировать данную запись\n2. Главное меню\n\nВведите номер пункта меню: ")
             match user_input:
                 case "1":
-                    Program.clear_screen()
-                    print("Телефонный справочник (редактирование записи)\n")
-
                     new_record = {"ID": record_id}
                     for name in self.phonebook.fieldnames[1:]:
-                        new_record[name] = guarded_input(f"{name}: ")
+                        new_record[name] = guarded_input(
+                            f"Телефонный справочник (редактирование записи)\n\n{name}: ",
+                            clear_screen=True
+                        )
 
                     self.phonebook.edit(record_id, new_record)
 
