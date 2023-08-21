@@ -49,11 +49,7 @@ class Program:
         while True:
             clear_screen()
             print(f"Телефонный справочник (c. {current_page_index + 1})\n")
-
-            # TODO: rewrite using some module for pretty tables
-            print(*(f"{field:<16}" for field in self.phonebook.fieldnames), sep="|")
-            for record in pages[current_page_index]:
-                print(*(f"{value:<16}" for value in record.values()), sep="|")
+            self.__print_table(pages[current_page_index])
 
             user_input = input(
                 "\n1. Следующая страница\n"
@@ -62,7 +58,6 @@ class Program:
                 "Введите номер пункта меню: "
             )
 
-            # Can't turn the first/last page? Redisplay the current one.
             match user_input:
                 case "1":
                     if current_page_index < len(pages) - 1:
@@ -126,14 +121,9 @@ class Program:
         while True:
             clear_screen()
             print("Телефонный справочник (редактирование записи)\n")
-
-            # TODO: rewrite using some module for pretty tables
-            # Print the record user want to edit
-            print(*(f"{field:<16}" for field in self.phonebook.fieldnames), sep="|")
-            print(*(f"{value:<16}" for value in self.phonebook.records[record_id - 1].values()), sep="|")
+            self.__print_table([self.phonebook.records[record_id - 1]])
 
             user_input = input("\n1. Отредактировать данную запись\n2. Главное меню\n\nВведите номер пункта меню: ")
-
             match user_input:
                 case "1":
                     clear_screen()
@@ -241,11 +231,7 @@ class Program:
                         while True:
                             clear_screen()
                             print("Телефонный справочник (результаты поиска)\n")
-
-                            # TODO: rewrite using some module for pretty tables
-                            print(*(f"{field:<16}" for field in self.phonebook.fieldnames), sep="|")
-                            for record in found_records:
-                                print(*(f"{value:<16}" for value in record.values()), sep="|")
+                            self.__print_table(found_records)
 
                             user_input = input("\n1. Главное меню\n\nВведите номер пункта меню: ")
 
@@ -258,6 +244,13 @@ class Program:
                     self.__render_main_menu()
                 case _:
                     continue
+
+    def __print_table(self, records: list[dict] | tuple[dict]) -> None:
+        """Print given records in pretty table. To some extent."""
+        # TODO: rewrite using some module for pretty tables
+        print(*(f"{field:<16}" for field in self.phonebook.fieldnames), sep="|")
+        for record in records:
+            print(*(f"{value:<16}" for value in record.values()), sep="|")
 
     @staticmethod
     def close() -> None:

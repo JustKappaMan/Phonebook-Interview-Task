@@ -50,7 +50,7 @@ class Phonebook:
         """
         result = []
 
-        # Remove None and "" elements
+        # Remove pairs with None and "" values
         # Also make all criteria lowercase once, rather than modifying while iterating over each record
         # Efficiency matters. Hooray!
         search_criteria = {k: v.lower() for k, v in search_criteria.items() if v}
