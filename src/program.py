@@ -5,7 +5,7 @@ from misc import *
 
 
 class Program:
-    """The UI class that uses Phonebook to manipulate all the records"""
+    """Basically, the UI class that uses Phonebook to manipulate all the records"""
 
     def __init__(self) -> None:
         self.phonebook = Phonebook()
@@ -35,7 +35,7 @@ class Program:
                 case "3":
                     self.__render_editing_section()
                 case "4":
-                    self.__render_finding_section()
+                    self.__render_search_section()
                 case "5":
                     Program.close()
                 case _:
@@ -115,8 +115,7 @@ class Program:
         while True:
             clear_screen()
             user_input = input(
-                "Телефонный справочник (редактирование записи)\n\n"
-                "Введите ID записи, подлежащей редактированию: "
+                "Телефонный справочник (редактирование записи)\n\nВведите ID записи, подлежащей редактированию: "
             )
 
             # Check record ID to be positive integer in valid range
@@ -133,11 +132,7 @@ class Program:
             print(*(f"{field:<16}" for field in self.phonebook.fieldnames), sep="|")
             print(*(f"{value:<16}" for value in self.phonebook.records[record_id - 1].values()), sep="|")
 
-            user_input = input(
-                "\n1. Отредактировать данную запись\n"
-                "2. Главное меню\n\n"
-                "Введите номер пункта меню: "
-            )
+            user_input = input("\n1. Отредактировать данную запись\n2. Главное меню\n\nВведите номер пункта меню: ")
 
             match user_input:
                 case "1":
@@ -177,10 +172,92 @@ class Program:
                 case _:
                     continue
 
-    def __render_finding_section(self) -> None:
-        clear_screen()
-        input("Finding record...press any key to continue...")
-        self.__render_main_menu()
+    def __render_search_section(self) -> None:
+        search_criteria = dict.fromkeys(self.phonebook.fieldnames)
+
+        while True:
+            clear_screen()
+            user_input = input(
+                "Телефонный справочник (поиск по записям)\n\n"
+                "Пожалуйста, задайте критерии для поиска\n\n"
+                f"1. ID - {search_criteria['ID'] or 'не задан'}\n"
+                f"2. Имя - {search_criteria['Имя'] or 'не задано'}\n"
+                f"3. Отчество - {search_criteria['Отчество'] or 'не задано'}\n"
+                f"4. Фамилия - {search_criteria['Фамилия'] or 'не задана'}\n"
+                f"5. Организация - {search_criteria['Организация'] or 'не задана'}\n"
+                f"6. Рабочий телефон - {search_criteria['Рабочий телефон'] or 'не задан'}\n"
+                f"7. Личный телефон - {search_criteria['Личный телефон'] or 'не задан'}\n"
+                "8. Начать поиск\n"
+                "9. Главное меню\n\n"
+                "Введите номер пункта меню: "
+            )
+
+            clear_screen()
+            match user_input:
+                case "1":
+                    search_criteria["ID"] = input("Телефонный справочник (поиск по записям)\n\nВведите ID: ")
+                case "2":
+                    search_criteria["Имя"] = input("Телефонный справочник (поиск по записям)\n\nВведите имя: ")
+                case "3":
+                    search_criteria["Отчество"] = input(
+                        "Телефонный справочник (поиск по записям)\n\nВведите отчество: "
+                    )
+                case "4":
+                    search_criteria["Фамилия"] = input("Телефонный справочник (поиск по записям)\n\nВведите фамилию: ")
+                case "5":
+                    search_criteria["Организация"] = input(
+                        "Телефонный справочник (поиск по записям)\n\nВведите организацию: "
+                    )
+                case "6":
+                    search_criteria["Рабочий телефон"] = input(
+                        "Телефонный справочник (поиск по записям)\n\nВведите рабочий телефон: "
+                    )
+                case "7":
+                    search_criteria["Личный телефон"] = input(
+                        "Телефонный справочник (поиск по записям)\n\nВведите личный телефон: "
+                    )
+                case "8":
+                    if not (found_records := self.phonebook.search(search_criteria)):
+                        # "Nothing was found" menu section
+                        while True:
+                            clear_screen()
+                            user_input = input(
+                                "Телефонный справочник (результаты поиска)\n\n"
+                                "Поиск с заданными критериями не дал результата\n\n"
+                                "1. Изменить критерии\n"
+                                "2. Главное меню\n\n"
+                                "Введите номер пункта меню: "
+                            )
+
+                            match user_input:
+                                case "1":
+                                    break
+                                case "2":
+                                    self.__render_main_menu()
+                                case _:
+                                    continue
+                    else:
+                        # "Successful search results" menu section
+                        while True:
+                            clear_screen()
+                            print("Телефонный справочник (результаты поиска)\n")
+
+                            # TODO: rewrite using some module for pretty tables
+                            print(*(f"{field:<16}" for field in self.phonebook.fieldnames), sep="|")
+                            for record in found_records:
+                                print(*(f"{value:<16}" for value in record.values()), sep="|")
+
+                            user_input = input("\n1. Главное меню\n\nВведите номер пункта меню: ")
+
+                            match user_input:
+                                case "1":
+                                    self.__render_main_menu()
+                                case _:
+                                    continue
+                case "9":
+                    self.__render_main_menu()
+                case _:
+                    continue
 
     @staticmethod
     def close() -> None:

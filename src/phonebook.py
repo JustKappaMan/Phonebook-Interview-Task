@@ -44,5 +44,21 @@ class Phonebook:
             writer.writerows(self.records)
         self.__update_records()
 
-    def find(self) -> None:
-        pass
+    def search(self, search_criteria: dict) -> list[dict]:
+        """Find all records according to given criteria.
+        Search is case-insensitive.
+        """
+        result = []
+
+        # Remove None and "" elements
+        # Also make all criteria lowercase once, rather than modifying while iterating over each record
+        # Efficiency matters. Hooray!
+        search_criteria = {k: v.lower() for k, v in search_criteria.items() if v}
+
+        for record in self.records:
+            for key in search_criteria:
+                if search_criteria[key] in record[key].lower():
+                    result.append(record)
+                    break
+
+        return result
