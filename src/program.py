@@ -16,7 +16,8 @@ def chunk(it: list, size: int) -> list[tuple]:
 class Program:
     """Basically, the UI class that uses Phonebook to manipulate all the records"""
 
-    def __init__(self, config_file_path: Path = Path("..", "settings.ini")) -> None:
+    def __init__(self, config_file_path: Path = Path("..", "settings2.ini")) -> None:
+        # Config that preserves case
         config = ConfigParser()
         config.optionxform = str
 
@@ -34,11 +35,11 @@ class Program:
             with open(config_file_path, "w", encoding="utf-8") as f:
                 config.write(f)
 
-            self.__guarded_input(
+            Program.__clear_screen()
+            input(
                 f"Файл настроек '{config_file_path}' не найден! "
                 "Создан файл со стандартными настройками."
-                "\n\nНажмите Enter чтобы продолжить...",
-                clear_screen=True,
+                "\n\nНажмите Enter чтобы продолжить..."
             )
 
         # Table column width and max DB value length at the same time.
