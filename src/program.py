@@ -16,7 +16,7 @@ def chunk(it: list, size: int) -> list[tuple]:
 class Program:
     """Basically, the UI class that uses Phonebook to manipulate all the records"""
 
-    def __init__(self, config_file_path: Path = Path("..", "settings2.ini")) -> None:
+    def __init__(self, config_file_path: Path = Path("..", "settings.ini")) -> None:
         # Config that preserves case
         config = ConfigParser()
         config.optionxform = str
@@ -44,21 +44,21 @@ class Program:
 
         # Table column width and max DB value length at the same time.
         # Can't be less than 16 to be displayed properly.
-        self.column_width = config.getint("DEFAULT", "ColumnWidth", fallback=16)
+        self.column_width = config.getint("Appearance", "ColumnWidth", fallback=16)
         self.column_width = max(self.column_width, 16)
 
         # Number of table rows per page when viewing DB/search results.
         # Recommended (and default) value is 10. Min value is 1.
-        self.records_per_page = config.getint("DEFAULT", "RecordsPerPage", fallback=10)
+        self.records_per_page = config.getint("Appearance", "RecordsPerPage", fallback=10)
         self.records_per_page = 10 if self.records_per_page < 1 else self.records_per_page
 
-        # If True, the `==` operator is used when searching, otherwise `in`. Search is ALWAYS case-insensitive.
+        # If True, the `==` operator is used when searching, otherwise `in`.
         # Default value is False.
-        self.search_is_strict = config.getboolean("DEFAULT", "Strict", fallback=False)
+        self.search_is_strict = config.getboolean("Search", "Strict", fallback=False)
 
         # If True, the search is case-sensitive, otherwise it's not.
         # Default value is False.
-        self.search_is_case_sensitive = config.getboolean("DEFAULT", "CaseSensitive", fallback=False)
+        self.search_is_case_sensitive = config.getboolean("Search", "CaseSensitive", fallback=False)
 
         self.phonebook = Phonebook()
 
