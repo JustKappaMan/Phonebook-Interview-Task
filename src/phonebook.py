@@ -44,7 +44,7 @@ class Phonebook:
             writer.writerows(self.records)
         self.__update_records()
 
-    def search(self, search_criteria: dict) -> list[dict]:
+    def search(self, search_criteria: dict, is_strict: bool) -> list[dict]:
         """Find all records according to given criteria.
         Search is case-insensitive.
         """
@@ -55,10 +55,19 @@ class Phonebook:
         # Efficiency matters. Hooray!
         search_criteria = {k: v.lower() for k, v in search_criteria.items() if v}
 
-        for record in self.records:
-            for key in search_criteria:
-                if search_criteria[key] in record[key].lower():
-                    result.append(record)
-                    break
+        if is_strict:
+            # Use `==` to compare records
+            for record in self.records:
+                for key in search_criteria:
+                    if search_criteria[key] == record[key].lower():
+                        result.append(record)
+                        break
+        else:
+            # Use `in` to compare records
+            for record in self.records:
+                for key in search_criteria:
+                    if search_criteria[key] in record[key].lower():
+                        result.append(record)
+                        break
 
         return result

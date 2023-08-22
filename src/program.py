@@ -29,6 +29,7 @@ class Program:
     def __init__(self) -> None:
         self.phonebook = Phonebook()
         self.max_field_length = 16
+        self.search_is_strict = False
 
     def run(self) -> None:
         self.__render_main_menu()
@@ -221,7 +222,7 @@ class Program:
                         "Телефонный справочник (поиск по записям)\n\nВведите личный телефон: ", clear_screen=True
                     )
                 case "8":
-                    if not (found_records := self.phonebook.search(search_criteria)):
+                    if not (found_records := self.phonebook.search(search_criteria, is_strict=self.search_is_strict)):
                         # "Nothing was found" menu section
                         while True:
                             Program.clear_screen()
