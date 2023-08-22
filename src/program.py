@@ -1,6 +1,8 @@
 import os
 import sys
-import itertools
+from pathlib import Path
+from itertools import islice
+from configparser import ConfigParser
 
 from phonebook import Phonebook
 
@@ -8,16 +10,34 @@ from phonebook import Phonebook
 def chunk(it: list, size: int = 10) -> list[tuple]:
     """Split a list into equally-sized (except the last one) tuples"""
     it = iter(it)
-    return list(iter(lambda: tuple(itertools.islice(it, size)), ()))
+    return list(iter(lambda: tuple(islice(it, size)), ()))
 
 
 class Program:
     """Basically, the UI class that uses Phonebook to manipulate all the records"""
 
-    def __init__(self) -> None:
+    def __init__(self, config_file_path: Path = Path("..", "settings.ini")) -> None:
+        config = ConfigParser()
+
+        if config_file_path.exists():
+            with open(config_file_path, "r", encoding="utf-8") as f:
+                config.read_file(f, source=config_file_path.name)
+
+        self.column_width = config.getint("DEFAULT", "ColumnWidth", fallback=16)
+        self.column_width = 16 if self.column_width < 16 else self.column_width
+        self.search_is_strict = config.getboolean("DEFAULT", "StrictSearch", fallback=False)
+
+        if not config_file_path.exists():
+            with open(config_file_path, "w", encoding="utf-8") as f:
+                config.write(f)
+            self.__guarded_input(
+                f"Файл настроек '{config_file_path}' не найден! "
+                "Создан файл со стандартными настройками."
+                "\n\nНажмите Enter чтобы продолжить...",
+                clear_screen=True
+            )
+
         self.phonebook = Phonebook()
-        self.max_field_length = 16
-        self.search_is_strict = False
 
     def run(self) -> None:
         self.__render_main_menu()
@@ -267,10 +287,11 @@ class Program:
     def __print_table(self, records: list[dict] | tuple[dict]) -> None:
         """Print given records in pretty table. To some extent."""
         # TODO: rewrite using some module for pretty tables
-        print(*(field.center(self.max_field_length) for field in self.phonebook.fieldnames), sep="|")
-        print("=" * len(self.phonebook.fieldnames) * (self.max_field_length + 1))
+        print("=" * len(self.phonebook.fieldnames) * (self.column_width + 1))
+        print(*(field.center(self.column_width) for field in self.phonebook.fieldnames), sep="|")
+        print("=" * len(self.phonebook.fieldnames) * (self.column_width + 1))
         for record in records:
-            print(*(value.ljust(self.max_field_length) for value in record.values()), sep="|")
+            print(*(value.ljust(self.column_width) for value in record.values()), sep="|")
 
     def __guarded_input(self, prompt: str, clear_screen: bool = False) -> str:
         """To accept data that will fit in table column"""
@@ -280,7 +301,7 @@ class Program:
 
             input_data = input(prompt)
 
-            if len(input_data) <= self.max_field_length:
+            if len(input_data) <= self.column_width:
                 return input_data
 
     @staticmethod
