@@ -7,7 +7,7 @@ from configparser import ConfigParser
 from phonebook import Phonebook
 
 
-def chunk(it: list, size: int = 10) -> list[tuple]:
+def chunk(it: list, size: int) -> list[tuple]:
     """Split a list into equally-sized (except the last one) tuples"""
     it = iter(it)
     return list(iter(lambda: tuple(islice(it, size)), ()))
@@ -23,8 +23,18 @@ class Program:
             with open(config_file_path, "r", encoding="utf-8") as f:
                 config.read_file(f, source=config_file_path.name)
 
+        # Table column width and max DB value length at the same time.
+        # Can't be less than 16 to be displayed properly.
         self.column_width = config.getint("DEFAULT", "ColumnWidth", fallback=16)
-        self.column_width = 16 if self.column_width < 16 else self.column_width
+        self.column_width = max(self.column_width, 16)
+
+        # Number of table rows per page when viewing DB/search results.
+        # Recommended min value is 10.
+        self.records_per_page = config.getint("DEFAULT", "RecordsPerPage", fallback=10)
+        self.records_per_page = max(self.records_per_page, 10)
+
+        # If True, the `==` operator is used when searching, otherwise `in`. Search is ALWAYS case-insensitive.
+        # Default value is False.
         self.search_is_strict = config.getboolean("DEFAULT", "StrictSearch", fallback=False)
 
         if not config_file_path.exists():
@@ -72,7 +82,7 @@ class Program:
 
     def __render_viewing_section(self) -> None:
         """Menu section to view DB page by page"""
-        pages = chunk(self.phonebook.records)
+        pages = chunk(self.phonebook.records, self.records_per_page)
         current_page_index = 0
 
         while True:
@@ -256,7 +266,7 @@ class Program:
                                     continue
                     else:
                         # "Successful search results" menu section
-                        pages = chunk(found_records)
+                        pages = chunk(found_records, self.records_per_page)
                         current_page_index = 0
 
                         while True:
