@@ -44,16 +44,17 @@ class Phonebook:
             writer.writerows(self.records)
         self.__update_records()
 
-    def search(self, search_criteria: dict, is_strict: bool) -> list[dict]:
+    def search(self, search_criteria: dict, is_strict: bool, is_case_sensitive: bool) -> list[dict]:
         """Find all records according to given criteria.
         Search is case-insensitive.
         """
         result = []
 
         # Remove pairs with None and "" values
-        # Also make all criteria lowercase once, rather than modifying while iterating over each record
-        # Efficiency matters. Hooray!
-        search_criteria = {k: v.lower() for k, v in search_criteria.items() if v}
+        if is_case_sensitive:
+            search_criteria = {k: v for k, v in search_criteria.items() if v}
+        else:
+            search_criteria = {k: v.lower() for k, v in search_criteria.items() if v}
 
         if is_strict:
             # Use `==` to compare records

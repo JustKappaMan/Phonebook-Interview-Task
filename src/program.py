@@ -37,6 +37,10 @@ class Program:
         # Default value is False.
         self.search_is_strict = config.getboolean("DEFAULT", "StrictSearch", fallback=False)
 
+        # If True, the search is case-sensitive, otherwise it's not.
+        # Default value is False.
+        self.search_is_case_sensitive = config.getboolean("DEFAULT", "CaseSensitiveSearch", fallback=False)
+
         if not config_file_path.exists():
             with open(config_file_path, "w", encoding="utf-8") as f:
                 config.write(f)
@@ -44,7 +48,7 @@ class Program:
                 f"Файл настроек '{config_file_path}' не найден! "
                 "Создан файл со стандартными настройками."
                 "\n\nНажмите Enter чтобы продолжить...",
-                clear_screen=True
+                clear_screen=True,
             )
 
         self.phonebook = Phonebook()
@@ -245,7 +249,13 @@ class Program:
                         "Телефонный справочник (поиск по записям)\n\nВведите личный телефон: ", clear_screen=True
                     )
                 case "8":
-                    if not (found_records := self.phonebook.search(search_criteria, is_strict=self.search_is_strict)):
+                    if not (
+                        found_records := self.phonebook.search(
+                            search_criteria,
+                            is_strict=self.search_is_strict,
+                            is_case_sensitive=self.search_is_case_sensitive,
+                        )
+                    ):
                         # "Nothing was found" menu section
                         while True:
                             Program.__clear_screen()
