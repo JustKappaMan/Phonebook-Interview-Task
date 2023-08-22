@@ -18,10 +18,28 @@ class Program:
 
     def __init__(self, config_file_path: Path = Path("..", "settings.ini")) -> None:
         config = ConfigParser()
+        config.optionxform = str
 
         if config_file_path.exists():
             with open(config_file_path, "r", encoding="utf-8") as f:
                 config.read_file(f, source=config_file_path.name)
+        else:
+            config.add_section("Appearance")
+            config.set("Appearance", "ColumnWidth", "16")
+            config.set("Appearance", "RecordsPerPage", "10")
+            config.add_section("Search")
+            config.set("Search", "Strict", "False")
+            config.set("Search", "CaseSensitive", "False")
+
+            with open(config_file_path, "w", encoding="utf-8") as f:
+                config.write(f)
+
+            self.__guarded_input(
+                f"Файл настроек '{config_file_path}' не найден! "
+                "Создан файл со стандартными настройками."
+                "\n\nНажмите Enter чтобы продолжить...",
+                clear_screen=True,
+            )
 
         # Table column width and max DB value length at the same time.
         # Can't be less than 16 to be displayed properly.
@@ -29,27 +47,17 @@ class Program:
         self.column_width = max(self.column_width, 16)
 
         # Number of table rows per page when viewing DB/search results.
-        # Recommended min value is 10.
+        # Recommended (and default) value is 10. Min value is 1.
         self.records_per_page = config.getint("DEFAULT", "RecordsPerPage", fallback=10)
-        self.records_per_page = max(self.records_per_page, 10)
+        self.records_per_page = 10 if self.records_per_page < 1 else self.records_per_page
 
         # If True, the `==` operator is used when searching, otherwise `in`. Search is ALWAYS case-insensitive.
         # Default value is False.
-        self.search_is_strict = config.getboolean("DEFAULT", "StrictSearch", fallback=False)
+        self.search_is_strict = config.getboolean("DEFAULT", "Strict", fallback=False)
 
         # If True, the search is case-sensitive, otherwise it's not.
         # Default value is False.
-        self.search_is_case_sensitive = config.getboolean("DEFAULT", "CaseSensitiveSearch", fallback=False)
-
-        if not config_file_path.exists():
-            with open(config_file_path, "w", encoding="utf-8") as f:
-                config.write(f)
-            self.__guarded_input(
-                f"Файл настроек '{config_file_path}' не найден! "
-                "Создан файл со стандартными настройками."
-                "\n\nНажмите Enter чтобы продолжить...",
-                clear_screen=True,
-            )
+        self.search_is_case_sensitive = config.getboolean("DEFAULT", "CaseSensitive", fallback=False)
 
         self.phonebook = Phonebook()
 
