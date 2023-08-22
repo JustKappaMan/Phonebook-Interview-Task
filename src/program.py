@@ -54,7 +54,7 @@ class Program:
                 "4. Поиск по записям\n"
                 "5. Завершить программу\n\n"
                 "Введите номер пункта меню: "
-            )
+            ).strip()
 
             match user_input:
                 case "1":
@@ -85,7 +85,7 @@ class Program:
                 "2. Предыдущая страница\n"
                 "3. Главное меню\n\n"
                 "Введите номер пункта меню: "
-            )
+            ).strip()
 
             match user_input:
                 case "1":
@@ -119,7 +119,7 @@ class Program:
                 "1. Добавить еще одну\n"
                 "2. Главное меню\n\n"
                 "Введите номер пункта меню: "
-            )
+            ).strip()
 
             match user_input:
                 case "1":
@@ -147,7 +147,10 @@ class Program:
             print("Телефонный справочник (редактирование записи)\n")
             self.__print_table([self.phonebook.records[record_id - 1]])
 
-            user_input = input("\n1. Отредактировать данную запись\n2. Главное меню\n\nВведите номер пункта меню: ")
+            user_input = input(
+                "\n1. Отредактировать данную запись\n2. Главное меню\n\nВведите номер пункта меню: "
+            ).strip()
+
             match user_input:
                 case "1":
                     new_record = {"ID": record_id}
@@ -166,7 +169,7 @@ class Program:
                             "1. Отредактировать еще одну\n"
                             "2. Главное меню\n\n"
                             "Введите номер пункта меню: "
-                        )
+                        ).strip()
 
                         match user_input:
                             case "1":
@@ -199,7 +202,7 @@ class Program:
                 "8. Начать поиск\n"
                 "9. Главное меню\n\n"
                 "Введите номер пункта меню: "
-            )
+            ).strip()
 
             Program.__clear_screen()
             match user_input:
@@ -242,7 +245,7 @@ class Program:
                                 "1. Изменить критерии\n"
                                 "2. Главное меню\n\n"
                                 "Введите номер пункта меню: "
-                            )
+                            ).strip()
 
                             match user_input:
                                 case "1":
@@ -266,7 +269,7 @@ class Program:
                                 "2. Предыдущая страница\n"
                                 "3. Главное меню\n\n"
                                 "Введите номер пункта меню: "
-                            )
+                            ).strip()
 
                             match user_input:
                                 case "1":
@@ -299,7 +302,7 @@ class Program:
             if clear_screen:
                 Program.__clear_screen()
 
-            input_data = input(prompt)
+            input_data = input(prompt).strip()
 
             if len(input_data) <= self.column_width:
                 return input_data
