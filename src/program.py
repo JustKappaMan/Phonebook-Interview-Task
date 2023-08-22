@@ -28,6 +28,7 @@ class Program:
 
     def __init__(self) -> None:
         self.phonebook = Phonebook()
+        self.max_field_length = 16
 
     def run(self) -> None:
         self.__render_main_menu()
@@ -275,9 +276,10 @@ class Program:
     def __print_table(self, records: list[dict] | tuple[dict]) -> None:
         """Print given records in pretty table. To some extent."""
         # TODO: rewrite using some module for pretty tables
-        print(*(f"{field:<16}" for field in self.phonebook.fieldnames), sep="|")
+        print(*(field.center(self.max_field_length) for field in self.phonebook.fieldnames), sep="|")
+        print("=" * len(self.phonebook.fieldnames) * (self.max_field_length + 1))
         for record in records:
-            print(*(f"{value:<16}" for value in record.values()), sep="|")
+            print(*(value.ljust(self.max_field_length) for value in record.values()), sep="|")
 
     @staticmethod
     def clear_screen() -> None:
