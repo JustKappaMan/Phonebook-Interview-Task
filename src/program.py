@@ -8,13 +8,13 @@ from phonebook import Phonebook
 
 
 def chunk(it: list, size: int) -> list[tuple]:
-    """Split a list into equally-sized (except the last one) tuples"""
+    """Split a list into tuples of equal size (except the last one)"""
     it = iter(it)
     return list(iter(lambda: tuple(islice(it, size)), ()))
 
 
 class Program:
-    """Basically, the UI class that uses Phonebook to manipulate all the records"""
+    """Basically, the UI class. It uses Phonebook to manipulate all the records."""
 
     def __init__(self, config_file_path: Path = Path("..", "settings.ini")) -> None:
         # Config that preserves case
@@ -42,27 +42,28 @@ class Program:
                 "\n\nНажмите Enter чтобы продолжить..."
             )
 
-        # Table column width and max DB value length at the same time.
+        # Table column width and max table cell value length at the same time.
         # Can't be less than 16 to be displayed properly.
         self.column_width = config.getint("Appearance", "ColumnWidth", fallback=16)
         self.column_width = max(self.column_width, 16)
 
-        # Number of table rows per page when viewing DB/search results.
-        # Recommended (and default) value is 10. Min value is 1.
+        # Number of table rows per page when viewing records.
+        # The recommended (and default) value is 10. The min value is 1.
         self.records_per_page = config.getint("Appearance", "RecordsPerPage", fallback=10)
         self.records_per_page = 10 if self.records_per_page < 1 else self.records_per_page
 
-        # If True, the `==` operator is used when searching, otherwise `in`.
-        # Default value is False.
+        # If True, the `==` operator is used when searching, otherwise `in` is used.
+        # The default value is False.
         self.search_is_strict = config.getboolean("Search", "Strict", fallback=False)
 
         # If True, the search is case-sensitive, otherwise it's not.
-        # Default value is False.
+        # The default value is False.
         self.search_is_case_sensitive = config.getboolean("Search", "CaseSensitive", fallback=False)
 
         self.phonebook = Phonebook()
 
     def run(self) -> None:
+        """Start the program"""
         self.__render_main_menu()
 
     def __render_main_menu(self) -> None:
@@ -94,7 +95,7 @@ class Program:
                     continue
 
     def __render_viewing_section(self) -> None:
-        """Menu section to view DB page by page"""
+        """Menu section for viewing records page by page"""
         pages = chunk(self.phonebook.records, self.records_per_page)
         current_page_index = 0
 
@@ -123,10 +124,11 @@ class Program:
                     continue
 
     def __render_adding_section(self) -> None:
-        """Menu section to add a new record into DB"""
-        # ID is just like "INTEGER AUTO_INCREMENT" column in SQL table
-        # It's generated automatically, not received from user input
-        new_record = {"ID": len(self.phonebook.records) + 1}
+        """Menu section for adding a new record"""
+
+        # ID is just like "INTEGER AUTO_INCREMENT" column in SQL table.
+        # It's generated automatically, not received from user input.
+        new_record = {"ID": f"{len(self.phonebook.records) + 1}"}
         for name in self.phonebook.fieldnames[1:]:
             new_record[name] = self.__guarded_input(
                 f"Телефонный справочник (новая запись)\n\n{name}: ", clear_screen=True
@@ -153,15 +155,15 @@ class Program:
                     continue
 
     def __render_editing_section(self) -> None:
-        """Menu section to edit an existing record in DB"""
+        """Menu section for editing an existing record"""
         while True:
             user_input = self.__guarded_input(
                 "Телефонный справочник (редактирование записи)\n\nВведите ID записи, подлежащей редактированию: ",
                 clear_screen=True,
             )
 
-            # Check record ID to be positive integer in valid range
-            if not user_input.startswith("-") and user_input.isdigit():
+            # Check if record ID is a positive integer in valid range
+            if user_input.isdigit():
                 if 0 < (record_id := int(user_input)) <= len(self.phonebook.records):
                     break
 
@@ -317,8 +319,7 @@ class Program:
                     continue
 
     def __print_table(self, records: list[dict] | tuple[dict]) -> None:
-        """Print given records in pretty table. To some extent."""
-        # TODO: rewrite using some module for pretty tables
+        """Print given records in a pretty table. To some extent."""
         print("=" * len(self.phonebook.fieldnames) * (self.column_width + 1))
         print(*(field.center(self.column_width) for field in self.phonebook.fieldnames), sep="|")
         print("=" * len(self.phonebook.fieldnames) * (self.column_width + 1))
@@ -326,7 +327,7 @@ class Program:
             print(*(value.ljust(self.column_width) for value in record.values()), sep="|")
 
     def __guarded_input(self, prompt: str, clear_screen: bool = False) -> str:
-        """To accept data that will fit in table column"""
+        """To accept data that fits into a table column"""
         while True:
             if clear_screen:
                 Program.__clear_screen()
@@ -338,10 +339,11 @@ class Program:
 
     @staticmethod
     def __clear_screen() -> None:
-        """Clear command line on any platform"""
+        """Clear the command line on any platform"""
         os.system("cls" if sys.platform == "win32" else "clear")
 
     @staticmethod
     def close() -> None:
+        """Clear the command line and exit the program"""
         Program.__clear_screen()
         sys.exit()
