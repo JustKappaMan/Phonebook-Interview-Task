@@ -35,7 +35,7 @@ class Program:
             with open(config_file_path, "w", encoding="utf-8") as f:
                 config.write(f)
 
-            Program.__clear_screen()
+            Program.clear_screen()
             input(
                 f"Файл настроек '{config_file_path}' не найден! "
                 "Создан файл со стандартными настройками."
@@ -69,7 +69,7 @@ class Program:
     def __render_main_menu(self) -> None:
         """Main menu"""
         while True:
-            Program.__clear_screen()
+            Program.clear_screen()
             user_input = input(
                 "Телефонный справочник\n\n"
                 "1. Просмотреть записи\n"
@@ -100,7 +100,7 @@ class Program:
         current_page_index = 0
 
         while True:
-            Program.__clear_screen()
+            Program.clear_screen()
             print(f"Телефонный справочник (c. {current_page_index + 1})\n")
             self.__print_table(pages[current_page_index])
 
@@ -137,7 +137,7 @@ class Program:
         self.phonebook.add(new_record)
 
         while True:
-            Program.__clear_screen()
+            Program.clear_screen()
             user_input = input(
                 "Телефонный справочник (новая запись)\n\n"
                 "Запись успешно добавлена!\n\n"
@@ -168,7 +168,7 @@ class Program:
                     break
 
         while True:
-            Program.__clear_screen()
+            Program.clear_screen()
             print("Телефонный справочник (редактирование записи)\n")
             self.__print_table([self.phonebook.records[record_id - 1]])
 
@@ -178,7 +178,7 @@ class Program:
 
             match user_input:
                 case "1":
-                    new_record = {"ID": record_id}
+                    new_record = {"ID": f"{record_id}"}
                     for name in self.phonebook.fieldnames[1:]:
                         new_record[name] = self.__guarded_input(
                             f"Телефонный справочник (редактирование записи)\n\n{name}: ", clear_screen=True
@@ -187,7 +187,7 @@ class Program:
                     self.phonebook.edit(record_id, new_record)
 
                     while True:
-                        Program.__clear_screen()
+                        Program.clear_screen()
                         user_input = input(
                             "Телефонный справочник (редактирование записи)\n\n"
                             "Запись успешно отредактирована!\n\n"
@@ -213,7 +213,7 @@ class Program:
         search_criteria = dict.fromkeys(self.phonebook.fieldnames)
 
         while True:
-            Program.__clear_screen()
+            Program.clear_screen()
             user_input = input(
                 "Телефонный справочник (поиск по записям)\n\n"
                 "Пожалуйста, задайте критерии для поиска\n\n"
@@ -229,7 +229,7 @@ class Program:
                 "Введите номер пункта меню: "
             ).strip()
 
-            Program.__clear_screen()
+            Program.clear_screen()
             match user_input:
                 case "1":
                     search_criteria["ID"] = self.__guarded_input(
@@ -269,7 +269,7 @@ class Program:
                     ):
                         # "Nothing was found" menu section
                         while True:
-                            Program.__clear_screen()
+                            Program.clear_screen()
                             user_input = input(
                                 "Телефонный справочник (результаты поиска)\n\n"
                                 "Поиск с заданными критериями не дал результата\n\n"
@@ -291,7 +291,7 @@ class Program:
                         current_page_index = 0
 
                         while True:
-                            Program.__clear_screen()
+                            Program.clear_screen()
                             print(f"Телефонный справочник (результаты поиска c. {current_page_index + 1})\n")
                             self.__print_table(pages[current_page_index])
 
@@ -330,7 +330,7 @@ class Program:
         """To accept data that fits into a table column"""
         while True:
             if clear_screen:
-                Program.__clear_screen()
+                Program.clear_screen()
 
             input_data = input(prompt).strip()
 
@@ -338,12 +338,12 @@ class Program:
                 return input_data
 
     @staticmethod
-    def __clear_screen() -> None:
+    def clear_screen() -> None:
         """Clear the command line on any platform"""
         os.system("cls" if sys.platform == "win32" else "clear")
 
     @staticmethod
     def close() -> None:
         """Clear the command line and exit the program"""
-        Program.__clear_screen()
+        Program.clear_screen()
         sys.exit()
