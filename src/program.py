@@ -6,12 +6,6 @@ from config import Config
 from phonebook import Phonebook
 
 
-def chunk(it: list, size: int) -> list[tuple]:
-    """Split a list into tuples of equal size (except the last one)"""
-    it = iter(it)
-    return list(iter(lambda: tuple(islice(it, size)), ()))
-
-
 class Program:
     """Basically, the UI class. It uses Phonebook to manipulate all the records."""
 
@@ -62,7 +56,7 @@ class Program:
 
     def __render_viewing_section(self) -> None:
         """Menu section for viewing records page by page"""
-        pages = chunk(self.phonebook.records, self.config.records_per_page)
+        pages = self.__chunk_records(self.phonebook.records)
         current_page_index = 0
 
         while True:
@@ -253,7 +247,7 @@ class Program:
                                     continue
                     else:
                         # "Successful search results" menu section
-                        pages = chunk(found_records, self.config.records_per_page)
+                        pages = self.__chunk_records(found_records)
                         current_page_index = 0
 
                         while True:
@@ -302,6 +296,11 @@ class Program:
 
             if len(input_data) <= self.config.column_width:
                 return input_data
+
+    def __chunk_records(self, records: list[dict]) -> list[tuple]:
+        """Split list of records into equally sized tuples (the last one may vary)"""
+        it = iter(records)
+        return list(iter(lambda: tuple(islice(it, self.config.records_per_page)), ()))
 
     @staticmethod
     def clear_screen() -> None:
