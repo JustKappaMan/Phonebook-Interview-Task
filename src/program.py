@@ -1,9 +1,8 @@
 import os
 import sys
-from pathlib import Path
 from itertools import islice
-from configparser import ConfigParser
 
+from config import Config
 from phonebook import Phonebook
 
 
@@ -16,49 +15,16 @@ def chunk(it: list, size: int) -> list[tuple]:
 class Program:
     """Basically, the UI class. It uses Phonebook to manipulate all the records."""
 
-    def __init__(self, config_file_path: Path = Path("..", "settings.ini")) -> None:
-        # Config that preserves case
-        config = ConfigParser()
-        config.optionxform = str
+    def __init__(self) -> None:
+        self.config = Config()
 
-        if config_file_path.exists():
-            with open(config_file_path, "r", encoding="utf-8") as f:
-                config.read_file(f, source=config_file_path.name)
-        else:
-            config.add_section("Appearance")
-            config.set("Appearance", "ColumnWidth", "16")
-            config.set("Appearance", "RecordsPerPage", "10")
-            config.add_section("Search")
-            config.set("Search", "Strict", "False")
-            config.set("Search", "CaseSensitive", "False")
-
-            with open(config_file_path, "w", encoding="utf-8") as f:
-                config.write(f)
-
+        if not self.config.file.exists():
             Program.clear_screen()
             input(
-                f"Файл настроек '{config_file_path}' не найден! "
+                f"Файл настроек '{self.config.file}' не найден! "
                 "Создан файл со стандартными настройками."
                 "\n\nНажмите Enter чтобы продолжить..."
             )
-
-        # Table column width and max table cell value length at the same time.
-        # Can't be less than 16 to be displayed properly.
-        self.column_width = config.getint("Appearance", "ColumnWidth", fallback=16)
-        self.column_width = max(self.column_width, 16)
-
-        # Number of table rows per page when viewing records.
-        # The recommended (and default) value is 10. The min value is 1.
-        self.records_per_page = config.getint("Appearance", "RecordsPerPage", fallback=10)
-        self.records_per_page = 10 if self.records_per_page < 1 else self.records_per_page
-
-        # If True, the `==` operator is used when searching, otherwise `in` is used.
-        # The default value is False.
-        self.search_is_strict = config.getboolean("Search", "Strict", fallback=False)
-
-        # If True, the search is case-sensitive, otherwise it's not.
-        # The default value is False.
-        self.search_is_case_sensitive = config.getboolean("Search", "CaseSensitive", fallback=False)
 
         self.phonebook = Phonebook()
 
@@ -96,7 +62,7 @@ class Program:
 
     def __render_viewing_section(self) -> None:
         """Menu section for viewing records page by page"""
-        pages = chunk(self.phonebook.records, self.records_per_page)
+        pages = chunk(self.phonebook.records, self.config.records_per_page)
         current_page_index = 0
 
         while True:
@@ -263,8 +229,8 @@ class Program:
                     if not (
                         found_records := self.phonebook.search(
                             search_criteria,
-                            is_strict=self.search_is_strict,
-                            is_case_sensitive=self.search_is_case_sensitive,
+                            is_strict=self.config.search_is_strict,
+                            is_case_sensitive=self.config.search_is_case_sensitive,
                         )
                     ):
                         # "Nothing was found" menu section
@@ -287,7 +253,7 @@ class Program:
                                     continue
                     else:
                         # "Successful search results" menu section
-                        pages = chunk(found_records, self.records_per_page)
+                        pages = chunk(found_records, self.config.records_per_page)
                         current_page_index = 0
 
                         while True:
@@ -320,11 +286,11 @@ class Program:
 
     def __print_table(self, records: list[dict] | tuple[dict]) -> None:
         """Print given records in a pretty table. To some extent."""
-        print("=" * len(self.phonebook.fieldnames) * (self.column_width + 1))
-        print(*(field.center(self.column_width) for field in self.phonebook.fieldnames), sep="|")
-        print("=" * len(self.phonebook.fieldnames) * (self.column_width + 1))
+        print("=" * len(self.phonebook.fieldnames) * (self.config.column_width + 1))
+        print(*(field.center(self.config.column_width) for field in self.phonebook.fieldnames), sep="|")
+        print("=" * len(self.phonebook.fieldnames) * (self.config.column_width + 1))
         for record in records:
-            print(*(value.ljust(self.column_width) for value in record.values()), sep="|")
+            print(*(value.ljust(self.config.column_width) for value in record.values()), sep="|")
 
     def __guarded_input(self, prompt: str, clear_screen: bool = False) -> str:
         """To accept data that fits into a table column"""
@@ -334,7 +300,7 @@ class Program:
 
             input_data = input(prompt).strip()
 
-            if len(input_data) <= self.column_width:
+            if len(input_data) <= self.config.column_width:
                 return input_data
 
     @staticmethod
