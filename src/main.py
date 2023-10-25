@@ -9,7 +9,7 @@ def main() -> None:
     if version_info.major < py_major_ver_req or version_info.minor < py_minor_ver_req:
         Program.clear_screen()
         input(
-            f"Запуск невозможен. Минимальная требуемая версия Python — {py_major_ver_req}.{py_minor_ver_req}.\n\n"
+            f"Запуск невозможен. Минимальная требуемая версия Python -- {py_major_ver_req}.{py_minor_ver_req}.\n\n"
             "Нажмите Enter для выхода из программы..."
         )
         Program.clear_screen()

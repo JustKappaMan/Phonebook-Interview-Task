@@ -15,9 +15,8 @@ class Program:
         if self.config.file_not_found:
             Program.clear_screen()
             input(
-                f"Файл настроек '{self.config.file}' не найден! "
-                "Создан файл со стандартными настройками."
-                "\n\nНажмите Enter чтобы продолжить..."
+                f"Файл настроек '{self.config.file}' не найден! Создан файл со стандартными настройками.\n\n"
+                "Нажмите Enter чтобы продолжить..."
             )
 
         self.phonebook = Phonebook()
