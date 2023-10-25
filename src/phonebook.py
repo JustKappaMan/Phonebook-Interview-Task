@@ -5,7 +5,7 @@ from csv import DictReader, DictWriter
 class Phonebook:
     """The class that contains and manipulates all records"""
 
-    def __init__(self, file_path: Path = Path("..", "phonebook.csv")) -> None:
+    def __init__(self, file_path: Path = Path(__file__).resolve().parent.parent / "phonebook.csv") -> None:
         self.file = file_path
         self.fieldnames = ("ID", "Имя", "Отчество", "Фамилия", "Организация", "Рабочий телефон", "Личный телефон")
         self.records: list[dict] = []

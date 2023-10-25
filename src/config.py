@@ -5,7 +5,7 @@ from configparser import ConfigParser
 class Config(ConfigParser):
     """The class that contains and manipulates all settings"""
 
-    def __init__(self, file: Path = Path("..", "settings.ini")) -> None:
+    def __init__(self, file: Path = Path(__file__).resolve().parent.parent / "settings.ini") -> None:
         super().__init__()
 
         # Make config case-sensitive
