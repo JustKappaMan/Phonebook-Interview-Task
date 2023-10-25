@@ -12,7 +12,7 @@ class Program:
     def __init__(self) -> None:
         self.config = Config()
 
-        if not self.config.file.exists():
+        if self.config.file_not_found:
             Program.clear_screen()
             input(
                 f"Файл настроек '{self.config.file}' не найден! "

@@ -12,11 +12,9 @@ class Config(ConfigParser):
         self.optionxform = str
 
         self.file = file
+        self.file_not_found = not self.file.exists()
 
-        if self.file.exists():
-            with open(file, "r", encoding="utf-8") as f:
-                self.read_file(f, source=file.name)
-        else:
+        if self.file_not_found:
             self.add_section("Appearance")
             self.set("Appearance", "ColumnWidth", "16")
             self.set("Appearance", "RecordsPerPage", "10")
@@ -26,6 +24,9 @@ class Config(ConfigParser):
 
             with open(file, "w", encoding="utf-8") as f:
                 self.write(f)
+        else:
+            with open(file, "r", encoding="utf-8") as f:
+                self.read_file(f, source=file.name)
 
         # Table column width and max table cell value length at the same time.
         # Can't be less than 16 to be displayed properly.
