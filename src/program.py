@@ -11,7 +11,6 @@ class Program:
 
     def __init__(self) -> None:
         self.config = Config()
-
         if self.config.file_not_found:
             Program.clear_screen()
             input(
@@ -20,6 +19,12 @@ class Program:
             )
 
         self.phonebook = Phonebook()
+        if self.phonebook.file_not_found:
+            Program.clear_screen()
+            input(
+                f"Файл с данными '{self.phonebook.file}' не найден! Создан пустой файл.\n\n"
+                "Нажмите Enter чтобы продолжить..."
+            )
 
     def run(self) -> None:
         """Start the program"""
