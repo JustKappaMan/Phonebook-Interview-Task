@@ -47,7 +47,6 @@
   * Дефолтное значение -- False
 
 ## Благодарность
-* [JetBrains](https://www.jetbrains.com) за [Open Source Development лицензию](https://www.jetbrains.com/community/opensource) на их продукты
 * [Isaak Uchakaev](https://github.com/lk-geimfari) за [mimesis](https://github.com/lk-geimfari/mimesis)
 
 ## Информация о лицензии
